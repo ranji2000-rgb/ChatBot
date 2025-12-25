@@ -34,13 +34,20 @@ st.title("📊 Option Chain Analyzer")
 symbol = st.selectbox("Select Symbol", sorted(symbols.keys()))
 
 if st.button("Analyze"):
-    with st.spinner("Fetching option chain..."):
-        raw = fetch_option_chain(symbol)
-        chain = parse_option_chain(raw)
-        summary = generate_oi_summary(chain)
+    try:
+        with st.spinner("Fetching option chain from NSE..."):
+            raw = fetch_option_chain(symbol)
+            chain = parse_option_chain(raw)
+            summary = generate_oi_summary(chain)
 
-    st.subheader("📌 OI Summary")
-    st.json(summary)
+        st.subheader("📌 OI Summary")
+        st.json(summary)
 
-    st.subheader("📄 Parsed Option Chain")
-    st.dataframe(chain["strikes"])
+        st.subheader("📄 Parsed Option Chain")
+        st.dataframe(chain["strikes"])
+
+    except Exception as e:
+        st.error("❌ Unable to fetch option chain from NSE.")
+        st.warning("This usually happens due to NSE rate limits or session expiry.")
+        st.code(str(e))
+
