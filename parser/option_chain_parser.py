@@ -1,19 +1,27 @@
 from datetime import datetime
 
 def parse_option_chain(raw_json: dict) -> dict:
+    # -------------------------------
+    # SAFETY CHECK
+    # -------------------------------
+    if not raw_json or "records" not in raw_json:
+        raise ValueError(
+            f"NSE response invalid or blocked. Keys received: {list(raw_json.keys())}"
+        )
+
     records = raw_json["records"]
-    data = raw_json["filtered"]["data"]
+    data = raw_json.get("filtered", {}).get("data", [])
 
     chain = {
-        "symbol": records["underlying"],
-        "spot": records["underlyingValue"],
-        "expiry": records["expiryDates"][0],
+        "symbol": records.get("underlying"),
+        "spot": records.get("underlyingValue"),
+        "expiry": records.get("expiryDates", [None])[0],
         "timestamp": datetime.now().isoformat(),
         "strikes": []
     }
 
     for row in data:
-        strike = row["strikePrice"]
+        strike = row.get("strikePrice")
         ce = row.get("CE", {})
         pe = row.get("PE", {})
 
