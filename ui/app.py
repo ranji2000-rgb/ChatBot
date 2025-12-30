@@ -1,10 +1,26 @@
 # ChatBot/ui/app.py
+import sys
+import os
+
+# =========================================================
+# FIX PYTHON PATH (CRITICAL)
+# =========================================================
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+
+# =========================================================
+# NOW IMPORT WORKS
+# =========================================================
 import streamlit as st
 
-from chatbot.scraper.option_chain_fetcher import fetch_option_chain
-from chatbot.parser.option_chain_parser import parse_option_chain
-from chatbot.analysis.oi_summary import generate_oi_summary
+from scraper.option_chain_fetcher import fetch_option_chain
+from parser.option_chain_parser import parse_option_chain
+from analysis.oi_summary import generate_oi_summary
 
+# =========================================================
+# STREAMLIT UI
+# =========================================================
 st.set_page_config(page_title="Option Chain Analyzer", layout="wide")
 
 st.title("📊 Option Chain Analyzer")
@@ -39,7 +55,6 @@ if st.button("Analyze", use_container_width=True):
 
     except Exception as e:
         st.error("❌ Unable to fetch option chain from NSE")
-        st.warning("NSE rate limit / session expired")
         st.code(str(e))
 
 st.markdown("---")
