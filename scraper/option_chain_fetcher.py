@@ -1,6 +1,6 @@
 # ChatBot/scraper/option_chain_fetcher.py
 import time
-from scraper.nse_session import nse_session
+from chatbot.scraper.nse_session import nse_session
 
 def fetch_option_chain(symbol: str):
     symbol = symbol.upper()
