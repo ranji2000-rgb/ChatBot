@@ -14,7 +14,7 @@ st.set_page_config(
 )
 
 st.title("📊 Option Chain Analyzer")
-st.caption("Data source: NSE (session-based fetch with retry & protection)")
+st.caption("Data source: NSE (session-based fetch with retry protection)")
 
 # =========================================================
 # SYMBOL SELECTION
@@ -29,11 +29,7 @@ SYMBOLS = [
     "BANKNIFTY"
 ]
 
-symbol = st.selectbox(
-    "Select Symbol",
-    SYMBOLS,
-    index=0
-)
+symbol = st.selectbox("Select Symbol", SYMBOLS)
 
 # =========================================================
 # ANALYZE BUTTON
@@ -47,38 +43,22 @@ if st.button("Analyze", use_container_width=True):
 
         st.success("Option chain fetched successfully")
 
-        # -------------------------------------------------
-        # OPTION CHAIN TABLE
-        # -------------------------------------------------
         st.subheader("📈 Option Chain Snapshot")
-        st.dataframe(
-            parsed_df,
-            use_container_width=True,
-            hide_index=True
-        )
+        st.dataframe(parsed_df, use_container_width=True)
 
-        # -------------------------------------------------
-        # OI SUMMARY
-        # -------------------------------------------------
         st.subheader("🧠 Open Interest Summary")
-
         try:
-            oi_summary = generate_oi_summary(parsed_df)
-
-            for key, value in oi_summary.items():
-                st.write(f"**{key}:** {value}")
-
+            summary = generate_oi_summary(parsed_df)
+            for k, v in summary.items():
+                st.write(f"**{k}:** {v}")
         except Exception as e:
-            st.warning("OI summary could not be generated")
+            st.warning("OI summary failed")
             st.code(str(e))
 
     except Exception as e:
         st.error("❌ Unable to fetch option chain from NSE")
-        st.warning("Possible reasons: NSE rate-limit, session expiry, or network block")
+        st.warning("NSE rate-limit / session expired")
         st.code(str(e))
 
-# =========================================================
-# FOOTER
-# =========================================================
 st.markdown("---")
-st.caption("For educational & analysis purposes only. NSE data is unofficial.")
+st.caption("Unofficial NSE data. For analysis only.")
