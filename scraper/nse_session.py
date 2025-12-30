@@ -1,4 +1,4 @@
-# scraper/nse_session.py
+# ChatBot/scraper/nse_session.py
 import requests
 import time
 
@@ -10,16 +10,15 @@ class NSESession:
             "Accept": "application/json, text/plain, */*",
             "Accept-Language": "en-US,en;q=0.9",
             "Referer": "https://www.nseindia.com/option-chain",
-            "Connection": "keep-alive"
+            "Connection": "keep-alive",
         }
         self._warmup()
 
     def _warmup(self):
-        # REQUIRED: sets cookies
         self.session.get(
             "https://www.nseindia.com",
             headers=self.headers,
-            timeout=5
+            timeout=5,
         )
         time.sleep(1)
 
@@ -27,5 +26,5 @@ class NSESession:
         return self.session.get(url, headers=self.headers, timeout=5)
 
 
-# SINGLETON SESSION (important)
+# SINGLETON (IMPORTANT)
 nse_session = NSESession()
