@@ -1,9 +1,9 @@
 # ChatBot/ui/app.py
 import streamlit as st
 
-from scraper.option_chain_fetcher import fetch_option_chain
-from parser.option_chain_parser import parse_option_chain
-from analysis.oi_summary import generate_oi_summary
+from chatbot.scraper.option_chain_fetcher import fetch_option_chain
+from chatbot.parser.option_chain_parser import parse_option_chain
+from chatbot.analysis.oi_summary import generate_oi_summary
 
 st.set_page_config(page_title="Option Chain Analyzer", layout="wide")
 
