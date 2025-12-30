@@ -1,13 +1,31 @@
+# scraper/nse_session.py
 import requests
-from config.config import NSE_BASE_URL, HEADERS
+import time
 
-_session = None
+class NSESession:
+    def __init__(self):
+        self.session = requests.Session()
+        self.headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Referer": "https://www.nseindia.com/option-chain",
+            "Connection": "keep-alive"
+        }
+        self._warmup()
 
-def get_nse_session():
-    global _session
-    if _session is None:
-        session = requests.Session()
-        session.headers.update(HEADERS)
-        session.get(NSE_BASE_URL, timeout=10)
-        _session = session
-    return _session
+    def _warmup(self):
+        # REQUIRED: sets cookies
+        self.session.get(
+            "https://www.nseindia.com",
+            headers=self.headers,
+            timeout=5
+        )
+        time.sleep(1)
+
+    def get(self, url):
+        return self.session.get(url, headers=self.headers, timeout=5)
+
+
+# SINGLETON SESSION (important)
+nse_session = NSESession()
